@@ -60,6 +60,7 @@ jobs:
           
       - name: 移动JSC文件
         run: |
+          mkdir dist
           mv jsc/**/Test_*.jsc dist/
           
       - name: 生成发布包
