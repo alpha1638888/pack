@@ -32,31 +32,11 @@ jobs:
           npm install
           npm run bp
         
-      - name: 创建Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 上传Release
+        uses: softprops/action-gh-release@v1
         with:
+          files: test-${{ github.event.inputs.version }}.tgz
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
           body: ${{ github.event.inputs.description }}
-          draft: true           # 设置为草稿模式
-          prerelease: false
-
-      - name: 上传Release资源
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test-${{ github.event.inputs.version }}.tgz
-          asset_name: test-${{ github.event.inputs.version }}.tgz
-          asset_content_type: application/gzip
-
-      - name: 发布Release
-        uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.create_release.outputs.id }}
+          generate_release_notes: false
