@@ -56,17 +56,17 @@ jobs:
       - name: 下载所有JSC文件
         uses: actions/download-artifact@v3
         with:
-          path: dist
+          path: jsc
           
       - name: 移动JSC文件
         run: |
-          mv dist/**/Test_*.jsc dist/
+          mv jsc/**/Test_*.jsc dist/
           
       - name: 生成发布包
         run: |
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
-          npm run pack
+          npm run bp
           
       - name: 上传Release
         uses: softprops/action-gh-release@v1
