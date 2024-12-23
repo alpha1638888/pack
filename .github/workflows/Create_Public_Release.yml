@@ -58,22 +58,24 @@ jobs:
         with:
           path: jsc
           
-      - name: 移动JSC文件
+      - name: 生成发布包
         run: |
           mkdir dist
           mv jsc/**/Test_*.jsc dist/
-          
-      - name: 生成发布包
-        run: |
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
           npm run bp
           
-      - name: 上传Release
-        uses: softprops/action-gh-release@v1
+      - name: 上传到 GitHub Pages
+        uses: actions/upload-pages-artifact@v2
         with:
-          files: test-${{ github.event.inputs.version }}.tgz
-          tag_name: ${{ github.event.inputs.version }}
-          name: Release ${{ github.event.inputs.version }}
-          body: ${{ github.event.inputs.description }}
-          generate_release_notes: false
+          path: ./test-${{ github.event.inputs.version }}.tgz
+    
+      # - name: 上传Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: test-${{ github.event.inputs.version }}.tgz
+      #     tag_name: ${{ github.event.inputs.version }}
+      #     name: Release ${{ github.event.inputs.version }}
+      #     body: ${{ github.event.inputs.description }}
+      #     generate_release_notes: false
