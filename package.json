@@ -1,0 +1,29 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "types": "dist/types/index.d.ts",
+    "bin": {
+        "v": "./dist/cli.js"
+    },
+    "files": [
+        "dist/index.js",
+        "dist/Test.jsc"
+    ],
+    "scripts": {
+        "cli": "v --name test",
+        "bytenode ": "bytenode --compile ./dist/Test.js",
+        "build_dev": "tsc --build --diagnostics",
+        "build": "tsc --build --diagnostics",
+        "pack": "npm pack --pack-destination ../packTest",
+        "bp": "npm run build && npm run pack"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0",
+        "typescript": "^4.9.5"
+    },
+    "dependencies": {
+        "bytenode": "^1.5.6",
+        "commander": "^12.1.0"
+    }
+}
