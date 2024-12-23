@@ -67,9 +67,7 @@ jobs:
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
           npm run bp
-          
-      - name: 准备Pages目录
-        run: |
+          # 准备Pages目录
           mkdir -p pages
           mv test-${{ github.event.inputs.version }}.tgz pages/
 
@@ -83,11 +81,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      # - name: 上传Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: test-${{ github.event.inputs.version }}.tgz
-      #     tag_name: ${{ github.event.inputs.version }}
-      #     name: Release ${{ github.event.inputs.version }}
-      #     body: ${{ github.event.inputs.description }}
-      #     generate_release_notes: false
+      - name: 输出下载地址
+        run: |
+          echo "包下载地址: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/test-${{ github.event.inputs.version }}.tgz"    
