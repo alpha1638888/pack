@@ -1,6 +1,6 @@
 {
     "name": "test",
-    "version": "test-latest",
+    "version": "latest",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "bin": {
