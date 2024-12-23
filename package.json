@@ -14,7 +14,7 @@
     "scripts": {
         "build": "tsc --build --diagnostics",
         "pack": "npm pack --pack-destination",
-        "bp": "npm run build && node ./genJsc.js && npm run pack"
+        "bp": "npm run build && npm run pack"
     },
     "devDependencies": {
         "@types/node": "^18.0.0",
