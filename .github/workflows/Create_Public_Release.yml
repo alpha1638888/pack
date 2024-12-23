@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '22.12.0'
           
-      - name: 更新package.json版本号
+      - name: 更新版本号 安装依赖 生成npm包
         run: |
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
@@ -41,9 +41,9 @@ jobs:
           tag_name: ${{ github.event.inputs.version }}
           release_name: Release ${{ github.event.inputs.version }}
           body: ${{ github.event.inputs.description }}
-          draft: false
+          draft: true           # 设置为草稿模式
           prerelease: false
-          
+
       - name: 上传Release资源
         uses: actions/upload-release-asset@v1
         env:
@@ -53,3 +53,10 @@ jobs:
           asset_path: ./test-${{ github.event.inputs.version }}.tgz
           asset_name: test-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/gzip
+
+      - name: 发布Release
+        uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.create_release.outputs.id }}
