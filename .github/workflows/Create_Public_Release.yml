@@ -17,6 +17,33 @@ permissions:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12.0'
+          
+      - name: 构建JSC文件
+        run: |
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+          npm install
+          npm run build
+          node genJsc.js
+          
+      - name: 上传JSC文件
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsc-files-${{ matrix.os }}
+          path: dist/Test_*.jsc
+          
+  release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,12 +53,21 @@ jobs:
         with:
           node-version: '22.12.0'
           
-      - name: 更新版本号 安装依赖 生成npm包
+      - name: 下载所有JSC文件
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+          
+      - name: 移动JSC文件
+        run: |
+          mv dist/**/Test_*.jsc dist/
+          
+      - name: 生成发布包
         run: |
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
-          npm run bp
-        
+          npm run pack
+          
       - name: 上传Release
         uses: softprops/action-gh-release@v1
         with:
