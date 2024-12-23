@@ -21,6 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: 更新package.json版本号
+        run: |
+          # 移除v前缀
+          VERSION=${{ github.event.inputs.version }}
+          npm version $VERSION --no-git-tag-version
+          
       - name: 安装依赖
         run: npm install
         
@@ -45,6 +51,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test-latest.tgz
-          asset_name: test-latest.tgz
+          asset_path: ./test-${{ github.event.inputs.version }}.tgz
+          asset_name: test-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/gzip
