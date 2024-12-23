@@ -23,9 +23,7 @@ jobs:
       
       - name: 更新package.json版本号
         run: |
-          # 移除v前缀
-          VERSION=${{ github.event.inputs.version }}
-          npm version $VERSION --no-git-tag-version
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
           
       - name: 安装依赖
         run: npm install
