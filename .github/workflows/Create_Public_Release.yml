@@ -13,7 +13,9 @@ on:
         default: 'New Release'
         
 permissions:
-  contents: write        
+  contents: write
+  pages: write
+  id-token: write        
 
 jobs:
   build:
@@ -75,7 +77,12 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./pages
-    
+          
+      - name: 部署 GitHub Pages
+        uses: actions/deploy-pages@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       # - name: 上传Release
       #   uses: softprops/action-gh-release@v1
       #   with:
