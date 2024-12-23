@@ -21,15 +21,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12.0'
+          
       - name: 更新package.json版本号
         run: |
-          npm version ${{ github.event.inputs.version }} --no-git-tag-version
-          
-      - name: 安装依赖
-        run: npm install
-        
-      - name: 创建npm包
-        run: npm run bp
+          VERSION=${{ github.event.inputs.version }}
+          VERSION=${VERSION#v}
+          npm version $VERSION --no-git-tag-version
+          npm install
+          npm run bp
         
       - name: 创建Release
         id: create_release
@@ -49,6 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test-*.tgz
-          asset_name: test-${{ github.event.inputs.version }}.tgz
+          asset_path: ./test-$VERSION.tgz
+          asset_name: test-$VERSION.tgz
           asset_content_type: application/gzip
