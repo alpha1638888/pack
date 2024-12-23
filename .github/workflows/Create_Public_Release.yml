@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: '版本号 (例如: v1.0.0)'
+        description: '版本号 (例如: 1.0.0)'
         required: true
-        default: 'v1.0.0'
+        default: '1.0.0'
       description:
         description: '发布说明'
         required: false
@@ -28,9 +28,7 @@ jobs:
           
       - name: 更新package.json版本号
         run: |
-          VERSION=${{ github.event.inputs.version }}
-          VERSION=${VERSION#v}
-          npm version $VERSION --no-git-tag-version
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
           npm run bp
         
@@ -52,6 +50,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./test-$VERSION.tgz
-          asset_name: test-$VERSION.tgz
+          asset_path: ./test-${{ github.event.inputs.version }}.tgz
+          asset_name: test-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/gzip
