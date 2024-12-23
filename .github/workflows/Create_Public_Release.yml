@@ -4,44 +4,83 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: '版本号 (例如: v1.0.0)'
+        description: '版本号 (例如: 1.0.0)'
         required: true
-        default: 'v1.0.0'
+        default: '1.0.0'
       description:
         description: '发布说明'
         required: false
         default: 'New Release'
+        
+permissions:
+  contents: write
+  pages: write
+  id-token: write        
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.12.0'
+          
+      - name: 构建JSC文件
+        run: |
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+          npm install
+          npm run build
+          node genJsc.js
+          
+      - name: 上传JSC文件
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsc-files-${{ matrix.os }}
+          path: dist/Test_*.jsc
+          
+  release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: 安装依赖
-        run: npm install
-        
-      - name: 创建npm包
-        run: npm run bp
-        
-      - name: 创建Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
         with:
-          tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
-          body: ${{ github.event.inputs.description }}
-          draft: false
-          prerelease: false
+          node-version: '22.12.0'
           
-      - name: 上传Release资源
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 下载所有JSC文件
+        uses: actions/download-artifact@v3
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./*.tgz
-          asset_name: package.tgz
-          asset_content_type: application/gzip
+          path: jsc
+          
+      - name: 生成发布包
+        run: |
+          mkdir dist
+          mv jsc/**/Test_*.jsc dist/
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+          npm install
+          npm run bp
+          # 准备Pages目录
+          mkdir -p pages
+          mv test-${{ github.event.inputs.version }}.tgz pages/
+
+      - name: 上传到 GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./pages
+          
+      - name: 部署 GitHub Pages
+        uses: actions/deploy-pages@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: 输出下载地址
+        run: |
+          echo "包下载地址: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/test-${{ github.event.inputs.version }}.tgz"    

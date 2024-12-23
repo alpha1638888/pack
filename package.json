@@ -1,6 +1,6 @@
 {
     "name": "test",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "bin": {
@@ -9,12 +9,9 @@
     "files": [
         "dist/index.js",
         "dist/cli.js",
-        "dist/Test.jsc"
+        "dist/Test_*.jsc"
     ],
     "scripts": {
-        "cli": "p --name test",
-        "bytenode ": "bytenode --compile ./dist/Test.js",
-        "build_dev": "tsc --build --diagnostics",
         "build": "tsc --build --diagnostics",
         "pack": "npm pack --pack-destination",
         "bp": "npm run build && npm run pack"
