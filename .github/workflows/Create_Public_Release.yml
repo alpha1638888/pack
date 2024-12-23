@@ -66,10 +66,15 @@ jobs:
           npm install
           npm run bp
           
+      - name: 准备Pages目录
+        run: |
+          mkdir -p pages
+          mv test-${{ github.event.inputs.version }}.tgz pages/
+
       - name: 上传到 GitHub Pages
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./test-${{ github.event.inputs.version }}.tgz
+          path: ./pages
     
       # - name: 上传Release
       #   uses: softprops/action-gh-release@v1
