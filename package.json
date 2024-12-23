@@ -4,14 +4,15 @@
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
     "bin": {
-        "v": "./dist/cli.js"
+        "p": "./dist/cli.js"
     },
     "files": [
         "dist/index.js",
+        "dist/cli.js",
         "dist/Test.jsc"
     ],
     "scripts": {
-        "cli": "v --name test",
+        "cli": "p --name test",
         "bytenode ": "bytenode --compile ./dist/Test.js",
         "build_dev": "tsc --build --diagnostics",
         "build": "tsc --build --diagnostics",
