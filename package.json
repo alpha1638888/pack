@@ -12,12 +12,10 @@
         "dist/Test.jsc"
     ],
     "scripts": {
-        "cli": "p --name test",
-        "bytenode ": "bytenode --compile ./dist/Test.js",
-        "build_dev": "tsc --build --diagnostics",
+        "bytenode ": "bytenode -c ./dist/Test.js",
         "build": "tsc --build --diagnostics",
         "pack": "npm pack --pack-destination",
-        "bp": "npm run build && npm run pack"
+        "bp": "npm run build && npm run bytenode && npm run pack"
     },
     "devDependencies": {
         "@types/node": "^18.0.0",
