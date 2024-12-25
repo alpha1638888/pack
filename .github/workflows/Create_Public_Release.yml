@@ -34,6 +34,11 @@ jobs:
           npm run build
           node genJsc.js
           
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }} 
+          
       - name: 上传JSC文件
         uses: actions/upload-artifact@v3
         with:
