@@ -21,15 +21,11 @@ jobs:
   build:
     strategy:
       matrix:
+        node-version: [20, 22]
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      
-      - name: 设置 Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.12.0'
           
       - name: 构建JSC文件
         run: |
@@ -49,11 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: 设置 Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.12.0'
           
       - name: 下载所有JSC文件
         uses: actions/download-artifact@v3
