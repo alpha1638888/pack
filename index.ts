@@ -1,4 +1,3 @@
 require('bytenode');
-import os from "os";
-const mymodule = require('./Test_' + os.platform() + '.jsc');
+const mymodule = require('./Test_' + process.platform + '_' + process.versions.node.split('.')[0] + '.jsc');
 export const Test = mymodule.Test;
