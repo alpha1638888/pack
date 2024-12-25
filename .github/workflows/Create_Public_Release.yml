@@ -26,18 +26,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
           
       - name: 构建JSC文件
         run: |
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
           npm install
           npm run build
-          node genJsc.js
-          
-      - name: 设置 Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }} 
+          node genJsc.js 
           
       - name: 上传JSC文件
         uses: actions/upload-artifact@v3
