@@ -78,9 +78,9 @@ jobs:
         run: |
           mkdir dist
           mv jsc/**/Test_*.jsc dist/
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           npm version ${{ github.event.inputs.version_type }}
           npm install
           npm run bp
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git push
