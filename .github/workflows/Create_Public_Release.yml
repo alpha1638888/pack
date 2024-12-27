@@ -70,9 +70,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ubuntu-latest-${{ hashFiles('**/package-lock.json') }}
+          key: ubuntu-latest-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ubuntu-latest-
+            ubuntu-latest-node-modules-
           
       - name: 生成发布包
         run: |
